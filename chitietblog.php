@@ -1,17 +1,43 @@
 <?php
-session_start();
 include('./connect.php');
-// $user=[];
-//giải thích nếu có $_SESSION['user'] thì sẽ gán $user = $_SESSION['user'] còn không có thì bằng rỗng
-$user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
-// $user = $_SESSION['user'];
-$sql1 = "SELECT * FROM blogs";
-$data = mysqli_query($mysqli, $sql1);
+if (isset($_GET['id'])) {
+  $id = $_GET['id'];
+  $sql = "SELECT * FROM blogs WHERE blog_id = $id";
 
-$sqlCate = "SELECT * FROM blog_categories";
-$queryCate = mysqli_query($mysqli, $sqlCate);
+  $query = mysqli_query($mysqli, $sql);
 
+  $data = mysqli_fetch_array($query);
+
+
+  $sql1 = "SELECT * FROM blogs";
+  $data1 = mysqli_query($mysqli, $sql1);
+
+  $sqlCate = "SELECT * FROM blog_categories";
+  $queryCate = mysqli_query($mysqli, $sqlCate);
+}
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <!DOCTYPE html>
@@ -26,6 +52,7 @@ $queryCate = mysqli_query($mysqli, $sqlCate);
 
   <title>H2T SHOP</title>
   <link rel="stylesheet" href="index2.css" />
+  <link rel="stylesheet" href="./css/chitietblog.css" />
   <style>
     h2.title-banner {
       font-size: 1.7rem;
@@ -107,27 +134,79 @@ $queryCate = mysqli_query($mysqli, $sqlCate);
   </header>
 
   <a href="#header" class="btn-go"><i class="fa-solid fa-arrow-up" style="margin-top:15px"></i></a>
-
-
-
-
-
-
-
-  <!--CATEGORIES-->
   <br>
   <br>
-  <!-- Hiển thị load category -->
-  
-
-
-  <!-- Hien thi search san pham -->
-
-  
+  <br>
+  <!-- thử -->
 
 
 
-  <h2 class="new-product-title">Bài viết mới</h2>
+
+
+
+
+
+
+  <!-- //chính thức -->
+  <div class="container">
+    <section class="main" style=" text-align: center;">
+
+
+    <?php echo "<img src='./material-dashboard-master/material-dashboard-master/pages/uploads/" . $data['blog_image_main'] . "'width='50%';height:400px;>"; ?>
+      <br>
+      <br>
+
+
+      <h1>
+        <?= $data['blog_title'] ?>
+      </h1>
+      <br>
+      <p style=" text-align: left;">
+        <?= $data['blog_content'] ?>
+      </p>
+    </section>
+    <br>
+    <br>
+    <p>Biên tập bởi:
+      <!-- <?= $data['blog_name'] ?> -->
+    </p>
+    <br>
+    <p><i class="fa-regular fa-clock"></i>
+      <?= $data['blog_created_at'] ?>
+    </p>
+
+    <br>
+    <button id="likeButton" onclick="toggleLike()"><i class="fa-solid fa-thumbs-up"></i></button>
+    <span id="likeCounter">0</span> likes
+  </div>
+  <style>
+  .liked {
+    color: blue;
+    font-weight: bold;
+  }
+</style>
+
+
+
+  <br>
+  <br>
+  <br>
+
+
+  <h2 class="new-product-title">Bài viết liên quan</h2>
+
+  <br>
+  <br>
+  <br>
+
+  <?php
+  $sql1 = "SELECT * FROM blogs";
+  $data = mysqli_query($mysqli, $sql1);
+
+  $sqlCate = "SELECT * FROM blog_categories";
+  $queryCate = mysqli_query($mysqli, $sqlCate);
+
+  ?>
 
   <!-- DESIGN SECTION FOR MAN -->
   <div class="product-container">
@@ -136,19 +215,34 @@ $queryCate = mysqli_query($mysqli, $sqlCate);
       ?>
       <div class="product-card product">
         <a href="chitietblog.php">
-        <?php echo "<img src='./material-dashboard-master/material-dashboard-master/pages/uploads/" . $value['blog_image_main'] . "'width='100%';height:400px;>"; ?>
+          <?php echo "<img src='./material-dashboard-master/material-dashboard-master/pages/uploads/" . $value['blog_image_main'] . "'width='100%';height:400px;>"; ?>
         </a>
         <h3>
           <?php echo $value['blog_title'] ?>
         </h3>
         <p>
-          <?php echo $value['blog_created_at'] ?> 
+          <?php echo $value['blog_created_at'] ?>
         </p>
         <a class="button" href="chitietblog.php?id=<?php echo $value['blog_id'] ?>">Xem thêm</a>
         <!-- <button type="submit" class="button">Xem thêm</button> -->
       </div>
     <?php endforeach ?>
   </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -197,7 +291,21 @@ $queryCate = mysqli_query($mysqli, $sqlCate);
       </div>
     </div>
   </footer>
-</body>
 
+  <!-- nút like -->
+  <script>
+    function toggleLike() {
+      var button = document.getElementById("likeButton");
+      var counter = document.getElementById("likeCounter");
 
-</html>
+      if (button.classList.contains("liked")) {
+        // Nếu nút đã được thích
+        counter.textContent = parseInt(counter.textContent) - 1;
+        button.classList.remove("liked");
+      } else {
+        // Nếu nút chưa được thích
+        counter.textContent = parseInt(counter.textContent) + 1;
+        button.classList.add("liked");
+      }
+    }
+  </script>

@@ -16,7 +16,7 @@ session_start();
 </head>
 <body>
 <form class="form_container" action="login.php" method="POST">
-  <div class="logo_container"> <a href="index2.php"><img src="./image/logoh2t.png"></a></div>
+  <div class="logo_container"> <a href="index.php"><img src="./image/logoh2t.png"></a></div>
   <div class="title_container">
     <p class="title">Login to your Account</p>
     <span class="subtitle">Get started with our app, just create an account and enjoy the experience.</span>
@@ -39,7 +39,7 @@ session_start();
     <span>Đăng nhập</span>
   </button>
 
-  <a href="reset_pass.php" style="text-align: end;" class="note">Quên mật khẩu ?</a>
+  <!-- <a href="reset_pass.php" style="text-align: end;" class="note">Quên mật khẩu ?</a> -->
 
   <div class="separator">
     <hr class="line">
@@ -72,7 +72,7 @@ session_start();
     <span>Sign In with Apple</span>
   </button>
   <a href="sign_up.php" class="note">Bạn chưa có tài khoản</a>
-  <a href="index2.php" class="note">Quay về trang chủ</a>
+  <a href="index.php" class="note">Quay về trang chủ</a>
 </form>
 
 
@@ -119,7 +119,7 @@ include('connect.php');
             }
             if($checkPassword && $data['role'] == 0){
                 $_SESSION['user'] = $data;
-                echo "<script>window.location.href='./index2.php'</script>";
+                echo "<script>window.location.href='./index.php'</script>";
                 exit();
             }
             else{

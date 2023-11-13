@@ -1,77 +1,87 @@
-<?php 
+<?php
 session_start();
 include('./connect.php');
-// $user=[];
-//giải thích nếu có $_SESSION['user'] thì sẽ gán $user = $_SESSION['user'] còn không có thì bằng rỗng
-$user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
-// $user = $_SESSION['user'];
-foreach ($_SESSION['cart'] as $items) {
-  extract($items);
-
 if(isset($_POST['muahang'])){
-//   $name = $_POST['hoten'];
-//   $phone = $_POST['sodienthoai'];
-//   $address = $_POST['diachi'];
-//   $pttt = $_POST['pttt'];
-//   if(!$name || !$phone || !$address ||!$pttt){
-//       echo "Vui lòng nhập đầy đủ thông tin. <a href='javascript: history.go(-1)'>Trở lại</a>";
-//       exit();
-//   }
-//   if (is_numeric($phone)) {
-//       // Kiểm tra xem chuỗi đầu vào có đúng 10 kí tự
-//       if (strlen($phone) === 10 && substr($phone, 0, 1) === '0') {
-//       } else {
-//           echo "Số điện thoại hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
-//       exit();
-//       }
-//   } else {
-//       echo "Số điện thoại không hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
-//       exit();
-//   }
+      $name = $_POST['hoten'];
+      $phone = $_POST['sodienthoai'];
+      $address = $_POST['diachi'];
+      $pttt = $_POST['pttt'];
+      if(!$name || !$phone || !$address ||!$pttt){
+        echo "Vui lòng nhập đầy đủ thông tin. <a href='javascript: history.go(-1)'>Trở lại</a>";
+        exit();
+    }
+    if (is_numeric($phone)) {
+        // Kiểm tra xem chuỗi đầu vào có đúng 10 kí tự
+        if (strlen($phone) === 10 && substr($phone, 0, 1) === '0') {
+        } else {
+            echo "Số điện thoại hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
+        exit();
+        }
+    } else {
+        echo "Số điện thoại không hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
+        exit();
+    }
+      $total = 0;
+      $sql = "INSERT INTO customers (customer_name,customer_phonenumber,customer_address,customer_payment) VALUES('$name','$phone','$address','$pttt')"  ; 
+      $query = mysqli_query($mysqli,$sql);
+      if ($query) {
+        $last_id = mysqli_insert_id($mysqli);
+        // echo "New record created successfully. Last inserted ID is: " . $last_id;
+        
+      } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+      }
 
-//   $queryThongTin = ("
-//   INSERT INTO customers (
-//       customer_name,
-//       customer_phonenumber,
-//       customer_address,
-//       customer_payment
-//   )
-//   VALUE (
-//       '{$name}',
-//       '{$phone}',
-//       '{$address}',
-//       '{$pttt}'
+      for ($i=0; $i < sizeof($_SESSION['cart']); $i++) { 
+        $tensp = $_SESSION['cart'][$i]['name'];
+        $hinhsp = $_SESSION['cart'][$i]['image'];
+        $dongia = $_SESSION['cart'][$i]['price'];
+        $soluong = $_SESSION['cart'][$i]['quantity'];
+        $thanhtien = $soluong *$dongia;
 
-//   )
-// ");
 
-// $queryPro = ("
-// INSERT INTO orders (
-//     product_id,
-//     customer_name
+        $sql1 = "INSERT INTO cart (tensp ,hinhsp, dongia, soluong, thanhtien, customer_id) 
+        VALUES('$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$last_id')" ; 
+        $query1 = mysqli_query($mysqli,$sql1);
+        $last_id_cart = mysqli_insert_id($mysqli);
+      }
+      $sql2 = "INSERT INTO order_details (cart_id) VALUES ('$last_id_cart')";
+      $query2 = mysqli_query($mysqli,$sql2);
 
-// )
-// VALUE (
-//     '{$id}',
-//     '{$name}'
-// )
-// ");
 
-// $addCustomer = mysqli_query($mysqli,$queryThongTin);
-// $addProd = mysqli_query($mysqli,$queryPro);
-// if ($addCustomer && $addProd){
-//   echo "<script>window.location.href='./index.php'</script>";
-//   exit();
-// }
-    
-// else{
-//     echo "Có lỗi xảy ra trong quá trình đăng ký. <a href='sign_up.php'>Thử lại</a>";
-// }
 
-// }
+
+      //show giỏ hàng
+      $ttkh = ' <h2>Bạn đã đặt hàng thành công !</h2> <br>
+      <h2>ID đơn hàng là: '.$last_id.'</h2> <br>
+      </div>
+        <span class="modal__title">Thông tin đơn hàng</span>
+      </div>
+      <div class="modal__body">
+      <div class="input">
+          <label class="input__label">Name:</label>
+          <input class="input__field" type="text" placeholder="Họ và tên của bạn..." name="hoten" value="'.$name.'">
+          <p class="input__description">Không quá 100 kí tự</p>
+      </div>
+      <div class="input">
+          <label class="input__label">Phone:</label>
+          <input class="input__field" type="text" placeholder="Số điện thoại của bạn..." name="sodienthoai"  value="'.$phone.'"> 
+      </div>
+      <div class="input">
+          <label class="input__label">Address:</label>
+          <input class="input__field" type="text" placeholder="Địa chỉ của bạn..." name="diachi"  value="'.$address.'">
+      </div>';
+
 }
+
+
+if(isset($_POST['xacnhan'])){
+  unset($_SESSION['cart']);
+  header('location:thankyou.html');
 }
+
 ?>
+
 
 
 
@@ -208,7 +218,7 @@ if(isset($_POST['muahang'])){
               <li><a class="dropdown-item" href="./material-dashboard-master/material-dashboard-master/pages/users.php">Dashboard</a></li>
             <?php } ?>
             <li><a class="dropdown-item" href="logout.php">Logout</a></li>
-            <li><a href="thongtin.php">Thông tin</a></li>
+            <li><a href="#">Sửa thông tin</a></li>
             </ul>
             <?php } else { ?>
             <a href="#">Tài khoản</a>
@@ -256,23 +266,8 @@ if(isset($_POST['muahang'])){
                                 <div class="modal__header">
                                 <div class="logo">
                                     <img src="./image/logoh2t.png" alt=""> <br>
-                                </div>
-                                    <span class="modal__title">Thông tin đơn hàng</span>
-                                </div>
-                                <div class="modal__body">
-                                    <div class="input">
-                                        <label class="input__label">Name:</label>
-                                        <input class="input__field" type="text" placeholder="Họ và tên của bạn..." name="hoten">
-                                        <p class="input__description">Không quá 100 kí tự</p>
-                                    </div>
-                                    <div class="input">
-                                        <label class="input__label">Phone:</label>
-                                        <input class="input__field" type="text" placeholder="Số điện thoại của bạn..." name="sodienthoai">
-                                    </div>
-                                    <div class="input">
-                                        <label class="input__label">Address:</label>
-                                        <input class="input__field" type="text" placeholder="Địa chỉ của bạn..." name="diachi">
-                                    </div>
+                                  <?php echo $ttkh ?>
+                                
                                     <div class="input">
                                         <!-- <label class="input__label">Email</label>
                                         <input class="input__field" type="email" placeholder="Email của bạn..." name="email"> -->
@@ -291,13 +286,14 @@ if(isset($_POST['muahang'])){
             <div class="cart">
                 <h2 class="cart-title">Đơn hàng của bạn</h2><br>
                 <?php 
+                // $ttgh = "";
                     $total = 0;
                     $i=0;
                     foreach ($_SESSION['cart'] as $items) {
                         extract($items);
                         $linkdelete ="deletecart.php?i=" .$i;
                         $total += $price * $quantity;
-                         echo'                
+                       echo'                
                          <div class="container-product">
                          <img class="image-product" src="./material-dashboard-master/material-dashboard-master/pages/uploads/'.$image.'">
                          <p style="font-weight:700; font-size:1.1rem;">'.$name.'</p><br>
@@ -320,6 +316,17 @@ if(isset($_POST['muahang'])){
                     Thanh toán khi nhận hàng
                     </label>
                     
+                    <input class="radio-input" name="pttt" id="radio2" type="radio" value="2">
+                    <label class="radio-label" for="radio2">
+                    <span class="radio-inner-circle"></span>
+                    Chuyển khoản 
+                    </label>
+                    
+                    <input class="radio-input" name="pttt" id="radio3" type="radio" value="3">
+                    <label class="radio-label" for="radio3">
+                    <span class="radio-inner-circle"></span>
+                    Ví điện tử
+                    </label>
                 </div>
                 </div>
                 <br>
@@ -329,8 +336,8 @@ if(isset($_POST['muahang'])){
                     <p  class="">Color/Size</p>
                     <p>399.00 VND</p> -->
                     <div class="oneline">
-                    <h2>Tổng: <?php echo $total;?> VND</h2>
-                    <button class="button button--primary" name="muahang">Hoàn tất</button>
+                    <h2>Tổng: <?php  echo $total;?> VND</h2>
+                    <button class="button button--primary" name="xacnhan">Xác nhận</button>
                     </div>
 
                 </div>

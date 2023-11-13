@@ -1,0 +1,114 @@
+Quen mat khau code
+<?php
+// Kết nối đến cơ sở dữ liệu
+$conn = mysqli_connect('localhost', 'username', 'password', 'database');
+
+if (isset($_POST['submit'])) {
+    $email = $_POST['email'];
+
+    // Kiểm tra xem email đã được đăng ký hay chưa
+    $query = "SELECT * FROM users WHERE email = '$email'";
+    $result = mysqli_query($conn, $query);
+
+    if (mysqli_num_rows($result) > 0) {
+        // Tạo mã khôi phục ngẫu nhiên
+        $code = uniqid();
+
+        // Cập nhật mã khôi phục cho người dùng trong cơ sở dữ liệu
+        $query = "UPDATE users SET reset_code = '$code' WHERE email = '$email'";
+        mysqli_query($conn, $query);
+
+        // Gửi email chứa liên kết để khôi phục mật khẩu
+        $resetLink = "http://example.com/reset_password.php?code=$code";
+        $subject = "Khôi phục mật khẩu";
+        $message = "Nhấp vào liên kết sau để khôi phục mật khẩu của bạn: $resetLink";
+        mail($email, $subject, $message);
+
+        echo "Một liên kết đã được gửi đến email của bạn để khôi phục mật khẩu.";
+    } else {
+        echo "Email không tồn tại trong hệ thống.";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quên mật khẩu</title>
+</head>
+<body>
+    <h2>Quên mật khẩu</h2>
+    <form method="POST" action="">
+        <input type="email" name="email" placeholder="Nhập email của bạn" required>
+        <input type="submit" name="submit" value="Gửi liên kết khôi phục">
+    </form>
+</body>
+</html>
+
+// mảng lỗi
+<?php
+include('connect.php');
+
+header('Content-Type: text/html; charset=UTF-8');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $username = $_POST['username'];
+  $password = $_POST['password'];
+  $email = $_POST['email'];
+
+  $errors = [];
+
+  if (!$username || !$password || !$email) {
+    $errors[] = "Vui lòng nhập đầy đủ thông tin.";
+  }
+
+  // Mã khóa mật khẩu
+  $pass = password_hash($password, PASSWORD_DEFAULT);
+
+  $queryUsername = "SELECT username FROM users WHERE username=?";
+  $stmt = $mysqli->prepare($queryUsername);
+  $stmt->bind_param("s", $username);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if ($result->num_rows > 0) {
+    $errors[] = "Tên đăng nhập này đã có người dùng. Vui lòng chọn tên đăng nhập khác.";
+  }
+
+  if (!preg_match("/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+\.[A-Za-z]{2,6}$/", $email)) {
+    $errors[] = "Email này không hợp lệ. Vui lòng nhập email khác.";
+  }
+
+  $queryEmail = "SELECT email FROM users WHERE email=?";
+  $stmt = $mysqli->prepare($queryEmail);
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $result = $stmt->get_result();
+
+  if ($result->num_rows > 0) {
+    $errors[] = "Email này đã có người dùng. Vui lòng chọn Email khác.";
+  }
+
+  if (empty($errors)) {
+    $queryThongTin = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
+    $stmt = $mysqli->prepare($queryThongTin);
+    $stmt->bind_param("sss", $username, $pass, $email);
+    $stmt->execute();
+
+    if ($stmt->affected_rows > 0) {
+      // Đăng ký thành công, hiển thị thông báo thành công và chuyển hướng
+      header('location: ./login.php');
+      exit;
+    } else {
+      $errors[] = "Có lỗi xảy ra trong quá trình đăng ký.";
+    }
+  }
+}
+
+// Hiển thị lỗi
+if (!empty($errors)) {
+  foreach ($errors as $error) {
+    echo $error . "<br>";
+  }
+}
+?>

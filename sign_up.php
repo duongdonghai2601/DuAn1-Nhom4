@@ -9,7 +9,7 @@
     </head>
 <body>
 <form class="form_container" action="sign_up.php" method="POST">
-  <div class="logo_container"> <a href="index2.php"><img src="./image/logoh2t.png"></a></div>
+  <div class="logo_container"> <a href="index.php"><img src="./image/logoh2t.png"></a></div>
   <div class="title_container">
     <p class="title">Sign up a new Account</p>
     <span class="subtitle">Get started with our app, just create an account and enjoy the experience.</span>
