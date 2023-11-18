@@ -1,5 +1,7 @@
 <?php
 session_start();
+$user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
+$customerid = $_SESSION['user']["user_id"];
 include('./connect.php');
 if(isset($_POST['muahang'])){
       $name = $_POST['hoten'];
@@ -38,10 +40,11 @@ if(isset($_POST['muahang'])){
         $dongia = $_SESSION['cart'][$i]['price'];
         $soluong = $_SESSION['cart'][$i]['quantity'];
         $thanhtien = $soluong *$dongia;
+        
 
-
+         
         $sql1 = "INSERT INTO cart (tensp ,hinhsp, dongia, soluong, thanhtien, customer_id) 
-        VALUES('$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$last_id')" ; 
+        VALUES('$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$customerid')" ; 
         $query1 = mysqli_query($mysqli,$sql1);
         $last_id_cart = mysqli_insert_id($mysqli);
       }

@@ -13,9 +13,8 @@ foreach ($data1 as $value) {
   // echo $value['cart_id']."<br>";
   array_push($idcart, $value['cart_id']);
 }
-$last_id = end($idcart);
-
-$sql2 = "SELECT * FROM cart INNER JOIN order_details ON cart.cart_id = order_details.cart_id where order_details.cart_id = $last_id";
+$customerid = $_SESSION['user']["user_id"];
+$sql2 = "SELECT * FROM cart  where customer_id = $customerid";
 $data2 = mysqli_query($mysqli, $sql2);
 
 // if(!$_SESSION['user']){
@@ -165,10 +164,10 @@ $data2 = mysqli_query($mysqli, $sql2);
                   <?php echo $total ?>
                 </td>
                 <td>
-                        <p class="text-xs font-weight-bold mb-0">
-                          <?php echo $value['cart_status'] ?>
-                        </p>
-                      </td>
+                  <p class="text-xs font-weight-bold mb-0">
+                    <?php echo $value['cart_status'] ?>
+                  </p>
+                </td>
               </tr>
             <?php endforeach ?>
           </tbody>
