@@ -1,32 +1,141 @@
 <?php
 session_start();
 $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
-$customerid = $_SESSION['user']["user_id"];
+// $customerid = $_SESSION['user']["user_id"];
 include('./connect.php');
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require "sendmail/phpmailer/src/Exception.php";
+require "sendmail/phpmailer/src/PHPMailer.php";
+require "sendmail/phpmailer/src/SMTP.php";
+
+$mail = new PHPMailer(true);
+
+//Truong hop chua dang nhap
+// if(isset($_POST['muahang'])){
+      
+//       $name = $_POST['hoten'];
+//       $phone = $_POST['sodienthoai'];
+//       $address = $_POST['diachi'];
+//       $pttt = $_POST['pttt'];
+//       if(!$name || !$phone || !$address ||!$pttt){
+//         echo "Vui lòng nhập đầy đủ thông tin. <a href='javascript: history.go(-1)'>Trở lại</a>";
+//         exit();
+//     }
+//     if (is_numeric($phone)) {
+//         // Kiểm tra xem chuỗi đầu vào có đúng 10 kí tự
+//         if (strlen($phone) === 10 && substr($phone, 0, 1) === '0') {
+//         } else {
+//             echo "Số điện thoại hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
+//         exit();
+//         }
+//     } else {
+//         echo "Số điện thoại không hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
+//         exit();
+//     }
+//       $total = 0;
+//       $sql = "INSERT INTO customers (customer_name,customer_phonenumber,customer_address,customer_payment) VALUES('$name','$phone','$address','$pttt')"  ; 
+//       $query = mysqli_query($mysqli,$sql);
+//       if ($query) {
+//         $last_id = mysqli_insert_id($mysqli);
+//         // echo "New record created successfully. Last inserted ID is: " . $last_id;
+        
+//       } else {
+//         echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+//       }
+
+//       for ($i=0; $i < sizeof($_SESSION['cart']); $i++) { 
+//         $tensp = $_SESSION['cart'][$i]['name'];
+//         $hinhsp = $_SESSION['cart'][$i]['image'];
+//         $dongia = $_SESSION['cart'][$i]['price'];
+//         $soluong = $_SESSION['cart'][$i]['quantity'];
+//         $thanhtien = $soluong *$dongia;
+        
+
+         
+//         $sql1 = "INSERT INTO cart (tensp ,hinhsp, dongia, soluong, thanhtien ) 
+//         VALUES('$tensp','$hinhsp','$dongia','$soluong','$thanhtien')" ; 
+//         $query1 = mysqli_query($mysqli,$sql1);
+//         $last_id_cart = mysqli_insert_id($mysqli);
+
+//         // $sql1 = "INSERT INTO cart (tensp ,hinhsp, dongia, soluong, thanhtien, customer_id) 
+//         // VALUES('$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$customerid')" ; 
+//         // $query1 = mysqli_query($mysqli,$sql1);
+//         // $last_id_cart = mysqli_insert_id($mysqli);
+//       }
+//       $sql2 = "INSERT INTO order_details (cart_id) VALUES ('$last_id_cart')";
+//       $query2 = mysqli_query($mysqli,$sql2);
+
+
+
+
+//       //show giỏ hàng
+//       $ttkh = ' <h2>Bạn đã đặt hàng thành công !</h2> <br>
+//       <h2>ID đơn hàng là: '.$last_id.'</h2> <br>
+//       </div>
+//         <span class="modal__title">Thông tin đơn hàng</span>
+//       </div>
+//       <div class="modal__body">
+//       <div class="input">
+//           <label class="input__label">Name:</label>
+//           <input class="input__field" type="text" placeholder="Họ và tên của bạn..." name="hoten" value="'.$name.'">
+//           <p class="input__description">Không quá 100 kí tự</p>
+//       </div>
+//       <div class="input">
+//           <label class="input__label">Phone:</label>
+//           <input class="input__field" type="text" placeholder="Số điện thoại của bạn..." name="sodienthoai"  value="'.$phone.'"> 
+//       </div>
+//       <div class="input">
+//           <label class="input__label">Address:</label>
+//           <input class="input__field" type="text" placeholder="Địa chỉ của bạn..." name="diachi"  value="'.$address.'">
+//       </div>';
+
+// }
+//Neu chua dang nhap
+if(!$user){
 if(isset($_POST['muahang'])){
-      $name = $_POST['hoten'];
-      $phone = $_POST['sodienthoai'];
-      $address = $_POST['diachi'];
-      $pttt = $_POST['pttt'];
-      if(!$name || !$phone || !$address ||!$pttt){
-        echo "Vui lòng nhập đầy đủ thông tin. <a href='javascript: history.go(-1)'>Trở lại</a>";
-        exit();
-    }
-    if (is_numeric($phone)) {
-        // Kiểm tra xem chuỗi đầu vào có đúng 10 kí tự
-        if (strlen($phone) === 10 && substr($phone, 0, 1) === '0') {
-        } else {
-            echo "Số điện thoại hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
-        exit();
-        }
-    } else {
-        echo "Số điện thoại không hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
-        exit();
-    }
-      $total = 0;
-      $sql = "INSERT INTO customers (customer_name,customer_phonenumber,customer_address,customer_payment) VALUES('$name','$phone','$address','$pttt')"  ; 
-      $query = mysqli_query($mysqli,$sql);
-      if ($query) {
+    $name = $_POST['hoten'];
+    $phone = $_POST['sodienthoai'];
+    $address = $_POST['diachi'];
+    $pttt = $_POST['pttt'];
+    if(!$name || !$phone || !$address ||!$pttt){
+      echo "Vui lòng nhập đầy đủ thông tin. <a href='javascript: history.go(-1)'>Trở lại</a>";
+      exit();
+  }
+  if (is_numeric($phone)) {
+      // Kiểm tra xem chuỗi đầu vào có đúng 10 kí tự
+      if (strlen($phone) === 10 && substr($phone, 0, 1) === '0') {
+      } else {
+          echo "Số điện thoại hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
+      exit();
+      }
+  } else {
+      echo "Số điện thoại không hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
+      exit();
+  }
+    $total = 0;
+
+    for ($i=0; $i < sizeof($_SESSION['cart']); $i++) { 
+      $tensp = $_SESSION['cart'][$i]['name'];
+      $hinhsp = $_SESSION['cart'][$i]['image'];
+      $dongia = $_SESSION['cart'][$i]['price'];
+      $soluong = $_SESSION['cart'][$i]['quantity'];
+      $thanhtien = $soluong *$dongia;
+      
+
+       
+      // $sql1 = "INSERT INTO cart (tensp ,hinhsp, dongia, soluong, thanhtien ) 
+      // VALUES('$tensp','$hinhsp','$dongia','$soluong','$thanhtien')" ; 
+      // $query1 = mysqli_query($mysqli,$sql1);
+      // // $last_id_cart = mysqli_insert_id($mysqli);
+      
+      $sql2 = "INSERT INTO customers 
+      (customer_name,customer_phonenumber,customer_address,customer_payment,tensp ,hinhsp, dongia, soluong, thanhtien) 
+      VALUES 
+      ('$name','$phone','$address','$pttt','$tensp','$hinhsp','$dongia','$soluong','$thanhtien')";
+      $query2 = mysqli_query($mysqli,$sql2);
+      if ($query2) {
         $last_id = mysqli_insert_id($mysqli);
         // echo "New record created successfully. Last inserted ID is: " . $last_id;
         
@@ -34,53 +143,191 @@ if(isset($_POST['muahang'])){
         echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
       }
 
-      for ($i=0; $i < sizeof($_SESSION['cart']); $i++) { 
-        $tensp = $_SESSION['cart'][$i]['name'];
-        $hinhsp = $_SESSION['cart'][$i]['image'];
-        $dongia = $_SESSION['cart'][$i]['price'];
-        $soluong = $_SESSION['cart'][$i]['quantity'];
-        $thanhtien = $soluong *$dongia;
-        
+      // $sql1 = "INSERT INTO cart (tensp ,hinhsp, dongia, soluong, thanhtien, customer_id) 
+      // VALUES('$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$customerid')" ; 
+      // $query1 = mysqli_query($mysqli,$sql1);
+      // $last_id_cart = mysqli_insert_id($mysqli);
 
-         
-        $sql1 = "INSERT INTO cart (tensp ,hinhsp, dongia, soluong, thanhtien, customer_id) 
-        VALUES('$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$customerid')" ; 
-        $query1 = mysqli_query($mysqli,$sql1);
-        $last_id_cart = mysqli_insert_id($mysqli);
+
+    }
+
+
+
+
+
+    //show giỏ hàng
+    $ttkh = ' <h2>Bạn đã đặt hàng thành công !</h2> <br>
+    <h2>ID đơn hàng là: '.$last_id.'</h2> <br>
+    </div>
+      <span class="modal__title">Thông tin đơn hàng</span>
+    </div>
+    <div class="modal__body">
+    <div class="input">
+        <label class="input__label">Name:</label>
+        <input class="input__field" type="text" placeholder="Họ và tên của bạn..." name="hoten" value="'.$name.'">
+        <p class="input__description">Không quá 100 kí tự</p>
+    </div>
+    <div class="input">
+        <label class="input__label">Phone:</label>
+        <input class="input__field" type="text" placeholder="Số điện thoại của bạn..." name="sodienthoai"  value="'.$phone.'"> 
+    </div>
+    <div class="input">
+        <label class="input__label">Address:</label>
+        <input class="input__field" type="text" placeholder="Địa chỉ của bạn..." name="diachi"  value="'.$address.'">
+    </div>';
+
+}
+$sql1 = "UPDATE products SET product_quantity = product_quantity - '$soluong', products_soluongban = products_soluongban + '$soluong' where product_name ='$tensp'";
+$resufl1 = mysqli_query($mysqli,$sql1);
+
+
+
+if (isset($_POST['magiamgia']) && $_POST['magiamgia'] == 'checked'){
+  $discount_amount = 0;
+  $discount_amount = $total * 0.1;
+  $final_amount = $total - $discount_amount;
+}
+else{
+  // Kiểm tra mã giảm giá và tính toán giảm giá
+
+}
+ 
+
+}
+//Da dang nhap va co tai khoan se them duoc customerid
+else{
+  if(isset($_POST['muahang'])){
+    $customerid = $_SESSION['user']["user_id"];
+    $name = $_POST['hoten'];
+    $phone = $_POST['sodienthoai'];
+    $address = $_POST['diachi'];
+    $pttt = $_POST['pttt'];
+    if(!$name || !$phone || !$address ||!$pttt){
+      echo "Vui lòng nhập đầy đủ thông tin. <a href='javascript: history.go(-1)'>Trở lại</a>";
+      exit();
+  }
+  if (is_numeric($phone)) {
+      // Kiểm tra xem chuỗi đầu vào có đúng 10 kí tự
+      if (strlen($phone) === 10 && substr($phone, 0, 1) === '0') {
+      } else {
+          echo "Số điện thoại hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
+      exit();
       }
-      $sql2 = "INSERT INTO order_details (cart_id) VALUES ('$last_id_cart')";
+  } else {
+      echo "Số điện thoại không hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
+      exit();
+  }
+    $total = 0;
+
+
+    for ($i=0; $i < sizeof($_SESSION['cart']); $i++) { 
+      $tensp = $_SESSION['cart'][$i]['name'];
+      $hinhsp = $_SESSION['cart'][$i]['image'];
+      $dongia = $_SESSION['cart'][$i]['price'];
+      $soluong = $_SESSION['cart'][$i]['quantity'];
+      $thanhtien = $soluong *$dongia;
+      
+
+       
+      // $sql1 = "INSERT INTO cart (tensp ,hinhsp, dongia, soluong, thanhtien,customerid ) 
+      // VALUES('$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$cuss')" ; 
+      // $query1 = mysqli_query($mysqli,$sql1);
+      // $last_id_cart = mysqli_insert_id($mysqli);
+
+      // $sql1 = "INSERT INTO cart (tensp ,hinhsp, dongia, soluong, thanhtien, customer_id) 
+      // VALUES('$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$customerid')" ; 
+      // $query1 = mysqli_query($mysqli,$sql1);
+      // // $last_id_cart = mysqli_insert_id($mysqli);
+
+      $sql2 = "INSERT INTO customers 
+      (customer_name,customer_phonenumber,customer_address,customer_payment,tensp ,hinhsp, dongia, soluong, thanhtien,customer_idkhach) 
+      VALUES 
+      ('$name','$phone','$address','$pttt','$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$customerid')";
       $query2 = mysqli_query($mysqli,$sql2);
+      if ($query2) {
+        $last_id = mysqli_insert_id($mysqli);
+        // echo "New record created successfully. Last inserted ID is: " . $last_id;
+        
+      } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+      }
+
+
+    }
 
 
 
 
-      //show giỏ hàng
-      $ttkh = ' <h2>Bạn đã đặt hàng thành công !</h2> <br>
-      <h2>ID đơn hàng là: '.$last_id.'</h2> <br>
-      </div>
-        <span class="modal__title">Thông tin đơn hàng</span>
-      </div>
-      <div class="modal__body">
-      <div class="input">
-          <label class="input__label">Name:</label>
-          <input class="input__field" type="text" placeholder="Họ và tên của bạn..." name="hoten" value="'.$name.'">
-          <p class="input__description">Không quá 100 kí tự</p>
-      </div>
-      <div class="input">
-          <label class="input__label">Phone:</label>
-          <input class="input__field" type="text" placeholder="Số điện thoại của bạn..." name="sodienthoai"  value="'.$phone.'"> 
-      </div>
-      <div class="input">
-          <label class="input__label">Address:</label>
-          <input class="input__field" type="text" placeholder="Địa chỉ của bạn..." name="diachi"  value="'.$address.'">
-      </div>';
+
+    //show giỏ hàng
+    $ttkh = ' <h2>Bạn đã đặt hàng thành công !</h2> <br>
+    <h2>ID đơn hàng là: '.$last_id.'</h2> <br>
+    </div>
+      <span class="modal__title">Thông tin đơn hàng</span>
+    </div>
+    <div class="modal__body">
+    <div class="input">
+        <label class="input__label">Name:</label>
+        <input class="input__field" type="text" placeholder="Họ và tên của bạn..." name="hoten" value="'.$name.'">
+        <p class="input__description">Không quá 100 kí tự</p>
+    </div>
+    <div class="input">
+        <label class="input__label">Phone:</label>
+        <input class="input__field" type="text" placeholder="Số điện thoại của bạn..." name="sodienthoai"  value="'.$phone.'"> 
+    </div>
+    <div class="input">
+        <label class="input__label">Address:</label>
+        <input class="input__field" type="text" placeholder="Địa chỉ của bạn..." name="diachi"  value="'.$address.'">
+    </div>';
+
 
 }
 
+//Tru so luong kho khi mua xong
+$sql1 = "UPDATE products SET product_quantity = product_quantity - '$soluong', products_soluongban = products_soluongban + '$soluong' where product_name ='$tensp'";
+$resufl1 = mysqli_query($mysqli,$sql1);
+}
+
+
 
 if(isset($_POST['xacnhan'])){
+    // Cấu hình SMTP để gửi email
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'haibanh2004@gmail.com';
+    $mail->Password = 'ntyhzlpytepozgyi';
+    $mail->SMTPSecure = 'tls';
+    $mail->Port = 587;
+
+    // Thiết lập thông tin người gửi và người nhận
+    $mail->setFrom('haibanh2004@gmail.com', 'H2T SHOP');
+    $mail->addAddress($_SESSION['user']['gmail'], $_SESSION['user']['username']);
+
+    // Thiết lập tiêu đề email và nội dung
+    $mail->Subject = 'CONGRATULATIONS CUSTOMERS';
+    $mail->Body    = 'Chúng tôi, H2T Store, muốn gửi lời cảm ơn sâu sắc đến quý khách hàng đã tin tưởng và mua sắm tại cửa hàng của chúng tôi.
+
+    Sự ủng hộ và lòng tin tưởng của quý khách hàng đã mang lại niềm vui và động lực lớn cho chúng tôi. Chúng tôi luôn nỗ lực hàng ngày để mang đến những sản phẩm và dịch vụ tốt nhất, đáp ứng các yêu cầu và mong đợi của quý khách. 
+    
+    Chúng tôi trân trọng sự lựa chọn của quý khách hàng và cam kết tiếp tục cải thiện để mang lại trải nghiệm mua sắm tốt hơn cho quý khách hàng. Nếu có bất kỳ góp ý, ý kiến hoặc câu hỏi nào, vui lòng liên hệ với chúng tôi. Chúng tôi luôn sẵn lòng giúp đỡ. 
+    
+    Một lần nữa, xin chân thành cảm ơn quý khách hàng đã ủng hộ H2T Store. Chúc quý khách có những trải nghiệm mua sắm thú vị và hài lòng với sản phẩm của chúng tôi.
+    
+    Trân trọng,
+    
+    H2T Store
+    <img src="./image/logoh2t.png">
+    ';
+
+    // Gửi email
+    $mail->send();
+
+    echo 'Email đã được gửi thành công!';
+
   unset($_SESSION['cart']);
-  header('location:thankyou.html');
+  header('location:thankyou.php');
+
 }
 
 ?>
@@ -203,6 +450,7 @@ if(isset($_POST['xacnhan'])){
               <li><a href="#">Giày da</a></li>
             </ul>
           </li>  -->
+          <li><a href="sanpham.php">Sản phẩm</a></li>
           <li><a href="about.html">Về H2T</a></li>
           <!-- <li>
             <a href="#forher">Đồ nữ</a>
@@ -221,7 +469,7 @@ if(isset($_POST['xacnhan'])){
               <li><a class="dropdown-item" href="./material-dashboard-master/material-dashboard-master/pages/users.php">Dashboard</a></li>
             <?php } ?>
             <li><a class="dropdown-item" href="logout.php">Logout</a></li>
-            <li><a href="#">Sửa thông tin</a></li>
+            <li><a href="thongtin.php">Thông tin</a></li>
             </ul>
             <?php } else { ?>
             <a href="#">Tài khoản</a>
@@ -235,7 +483,7 @@ if(isset($_POST['xacnhan'])){
         </ul>
       </nav>
       <!-- <li><a href="#"><img src="./image/logoh2t.png" class="logo"></a></li> -->
-      <form method="POST" action="index.php">
+      <!-- <form method="POST" action="index.php">
       <div class="search">
         <input
           type="text"
@@ -256,7 +504,7 @@ if(isset($_POST['xacnhan'])){
         <li class="list-icon">
           <i class="fa-solid fa-phone"></i> + 84 306 6845
         </li>
-      </div>
+      </div> -->
     </header>
 
     <section class="info-details">
@@ -322,14 +570,9 @@ if(isset($_POST['xacnhan'])){
                     <input class="radio-input" name="pttt" id="radio2" type="radio" value="2">
                     <label class="radio-label" for="radio2">
                     <span class="radio-inner-circle"></span>
-                    Chuyển khoản 
+                    QR CODE
                     </label>
                     
-                    <input class="radio-input" name="pttt" id="radio3" type="radio" value="3">
-                    <label class="radio-label" for="radio3">
-                    <span class="radio-inner-circle"></span>
-                    Ví điện tử
-                    </label>
                 </div>
                 </div>
                 <br>
@@ -339,7 +582,7 @@ if(isset($_POST['xacnhan'])){
                     <p  class="">Color/Size</p>
                     <p>399.00 VND</p> -->
                     <div class="oneline">
-                    <h2>Tổng: <?php  echo $total;?> VND</h2>
+                    <h2>Tổng:<?php echo $total ;?> VND</h2>
                     <button class="button button--primary" name="xacnhan">Xác nhận</button>
                     </div>
 

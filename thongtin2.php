@@ -4,19 +4,12 @@ include('./connect.php');
 // $user=[];
 //giải thích nếu có $_SESSION['user'] thì sẽ gán $user = $_SESSION['user'] còn không có thì bằng rỗng
 $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
-if(isset($_POST['capnhap'])){
-  $userid = $_SESSION['user']['user_id'];
-  $name = $_POST['name'];
-  $phone = $_POST['phone'];
-  $address = $_POST['address'];
-  $sql1 = "UPDATE users SET users_fullname = '$name',users_address = '$address', users_phonenumber = '$phone' WHERE user_id = $userid";
-  // $sql = "INSERT INTO users (users_fullname,users_address,users_phonenumber) VALUES ('$name','$address','$phone')";
-  $query1 = mysqli_query($mysqli,$sql1);
+$userid = $_SESSION['user']['user_id'];
 
-  echo "Sửa thành công";
-  header('location:thongtin2.php');
-}
 
+$sql = "SELECT * FROM users WHERE user_id = $userid";
+$query = mysqli_query($mysqli,$sql);
+$thongtin = mysqli_fetch_array($query);
 
 
 ?>
@@ -91,7 +84,7 @@ if(isset($_POST['capnhap'])){
         </ul>
       </nav>
       <!-- <li><a href="#"><img src="./image/logoh2t.png" class="logo"></a></li> -->
-      <!-- <form method="POST" action="index.php">
+      <form method="POST" action="index.php">
       <div class="search">
         <input
           type="text"
@@ -112,7 +105,7 @@ if(isset($_POST['capnhap'])){
         <li class="list-icon">
           <i class="fa-solid fa-phone"></i> + 84 306 6845
         </li>
-      </div> -->
+      </div>
     </header>
 
     <a href="#header" class="btn-go"><i class="fa-solid fa-arrow-up" style="margin-top:15px"></i></a>
@@ -121,7 +114,7 @@ if(isset($_POST['capnhap'])){
         <div class="col1">
             <h1 style="  margin-bottom: 30px;">Dành cho bạn</h1>
             <div class="link">
-            <a class="btn-donate" href="editthongtin.php" >
+            <a class="btn-donate" href="thongtin.php" >
                 CẬP NHẬP THÔNG TIN
             </a><br><br><br>
             <a class="btn-donate" href="order_details.php">
@@ -133,7 +126,7 @@ if(isset($_POST['capnhap'])){
         <?php if (isset($user['username'])) 
         
         ?>
-        <h1>Thông tin khách hàng</h1>
+        <h1>Thông tin khách hàng đã được cập nhập</h1>
         <form action="" method="post">
         <div class="input-group">
             <label class="label">Username:</label>
@@ -145,17 +138,16 @@ if(isset($_POST['capnhap'])){
         <div></div></div>
         <div class="input-group">
             <label class="label">Tên người nhận</label>
-            <input autocomplete="off" name="name" id="Email" class="input" type="text">
+            <input autocomplete="off" name="name" id="Email" class="input" type="text"value="<?php echo "$thongtin[users_fullname]"?>">
         <div></div></div>
         <div class="input-group">
             <label class="label">Số điện thoại</label>
-            <input autocomplete="off" name="phone" id="Email" class="input" type="text">
+            <input autocomplete="off" name="phone" id="Email" class="input" type="text" value="<?php echo "$thongtin[users_phonenumber]"?>">
         <div></div></div>
         <div class="input-group">
             <label class="label">Địa chỉ</label>
-            <input autocomplete="off" name="address" id="Email" class="input" type="text">
+            <input autocomplete="off" name="address" id="Email" class="input" type="text"value="<?php echo "$thongtin[users_address]"?>">
         <div></div></div>
-        <button class="button" style="margin: 20px 20px;" name="capnhap">Cập nhập</button>
         </form>
         </div>
     </div>

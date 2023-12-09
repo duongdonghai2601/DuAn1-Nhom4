@@ -36,6 +36,8 @@ if (isset($_POST['search'])) {
 }
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -69,6 +71,7 @@ if (isset($_POST['search'])) {
               <li><a href="#">Giày da</a></li>
             </ul>
           </li>  -->
+          <li><a href="sanpham.php">Sản phẩm</a></li>
           <li><a href="about.html">Về H2T</a></li>
           <!-- <li>
             <a href="#forher">Đồ nữ</a>
@@ -157,47 +160,7 @@ if (isset($_POST['search'])) {
       </div>
     </section>
 
-    
-    
-
-
-<!--CATEGORIES-->
-<form method="post" action="index.php">
-<div class="categories-design">
-<h2 class="new-product-title">Doanh mục sản phẩm bạn quan tâm</h2>
-<div class="select" >
-  <select name="category" id="category">
-    <option selected disabled>Doanh mục bạn tìm</option>
-  <? foreach ($queryCate as $key => $value) { ?>
-    <option value="<? echo $value['category_id']; ?>"><? echo $value['category_name']; ?></option>
-    <!-- <option value="2">Váy nữ</option>
-    <option value="3">Đầm</option> -->
-    <? } ?>
-  </select>
-</div>
-<button type="submit" class="button" name="load" style="margin-top:30px;">Load</button>
-</div>
-
-</form>
-<!-- Hiển thị load category -->
-<div class="product-container">
-<?php
-    if (isset($_POST['load'])) { //Kiểm tra xem nếu chưa nhấn thì ko chạy foreach
-        foreach ($data1 as $key => $value) {
-    ?>
-      <div class="product-card product">
-    <a href="chitietsanpham.php"> <?php echo "<img src='./material-dashboard-master/material-dashboard-master/pages/uploads/" . $value['product_image_main'] . "'width='100%';height:400px;>"; ?></a>
-          <h3><?php echo $value['product_name'] ?></h3>
-          <p>$ <?php echo $value['product_price'] ?> VND</p>
-          <a class="button" href="chitietsanpham.php?id=<?php echo $value['product_id'] ?>">Xem thêm</a>
-      </div>
-      <?php }
-    } ?>
-</div>
-
-
-<!-- Hien thi search san pham -->
-
+    <!-- Hien thi search san pham -->
 <div class="product-container">
 <?php
     if (isset($_POST['search'])) { //Kiểm tra xem nếu chưa nhấn thì ko chạy foreach
@@ -206,15 +169,12 @@ if (isset($_POST['search'])) {
       <div class="product-card product">
     <a href="chitietsanpham.php"> <?php echo "<img src='./material-dashboard-master/material-dashboard-master/pages/uploads/" . $value['product_image_main'] . "'width='100%';height:400px;>"; ?></a>
           <h3><?php echo $value['product_name'] ?></h3>
-          <p>$ <?php echo $value['product_price'] ?> VND</p>
+          <p><?php echo $value['product_price'] ?> VND</p>
           <a class="button" href="chitietsanpham.php?id=<?php echo $value['product_id'] ?>">Xem thêm</a>
       </div>
       <?php }
     } ?>
 </div>
-
-
-
 
 <h2 class="new-product-title">Sản phẩm mới</h2>
 
@@ -226,7 +186,7 @@ if (isset($_POST['search'])) {
       <div class="product-card product">
     <a href="chitietsanpham.php?id=<?php echo $value['product_id'] ?>"> <?php echo "<img src='./material-dashboard-master/material-dashboard-master/pages/uploads/" . $value['product_image_main'] . "'width='100%';height:400px;>"; ?></a>
           <h3><?php echo $value['product_name'] ?></h3>
-          <p>$ <?php echo $value['product_price'] ?> VND</p>
+          <p><?php echo $value['product_price'] ?> VND</p>
           <a class="button" href="chitietsanpham.php?id=<?php echo $value['product_id'] ?>">Xem thêm</a>
           <!-- <button type="submit" class="button">Xem thêm</button> -->
       </div>

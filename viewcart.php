@@ -36,23 +36,38 @@ $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
 
   </head >
   <body>
-    <header id="header" style="margin-bottom:100px">
+  <header id="header">
       <nav class="menu">
         <ul class="nav-bar">
           <li><a href="index.php">Trang chủ</a></li>
-
+           <!-- <li>
+            <a href="#forman">Đồ nam</a>
+            <ul class="sub-menu">
+              <li><a href="#">Áo sơ mi</a></li>
+              <li><a href="#">Quần jean</a></li>
+              <li><a href="#">Giày da</a></li>
+            </ul>
+          </li>  -->
+          <li><a href="sanpham.php">Sản phẩm</a></li>
           <li><a href="about.html">Về H2T</a></li>
-
+          <!-- <li>
+            <a href="#forher">Đồ nữ</a>
+            <ul class="sub-menu">
+              <li><a href=#">Áo croptop</a></li>
+              <li><a href="#">Đầm nữ</a></li>
+              <li><a href="#">Váy nữ</a></li>
+            </ul>
+          </li> -->
           <li><a href="blog.php">Blog</a></li>
           <li>
           <?php if (isset($user['username'])) { ?>
             <a href="#"><?php echo "Hello " . $user['username']; ?></a>
             <ul class="sub-menu">
             <?php if ($user['role'] == 1) { ?>
-              <li><a class="dropdown-item" href="dashboard.php">Dashboard</a></li>
+              <li><a class="dropdown-item" href="./material-dashboard-master/material-dashboard-master/pages/users.php">Dashboard</a></li>
             <?php } ?>
             <li><a class="dropdown-item" href="logout.php">Logout</a></li>
-            <li><a href="#">Sửa thông tin</a></li>
+            <li><a href="thongtin.php">Thông tin</a></li>
             </ul>
             <?php } else { ?>
             <a href="#">Tài khoản</a>
@@ -66,26 +81,28 @@ $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
         </ul>
       </nav>
       <!-- <li><a href="#"><img src="./image/logoh2t.png" class="logo"></a></li> -->
+      <!-- <form method="POST" action="index.php">
       <div class="search">
         <input
           type="text"
-          id="text"
+          name="searchSanPham" id="search"
           class="search-input"
           placeholder="Bạn tìm gì hôm nay ?"
           spellcheck="false"
         />
-        <button class="btn-search" type="submit">
+        <button class="btn-search" type="submit" name="search">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
       </div>
+      </form>
       <div class="icon">
         <li class="list-icon">
-          <i class="fa-solid fa-bag-shopping"></i> <a href="#">Giỏ hàng</a>
+        <a href="viewcart.php"><i class="fa-solid fa-bag-shopping"></i>Giỏ hàng</a>
         </li>
         <li class="list-icon">
           <i class="fa-solid fa-phone"></i> + 84 306 6845
         </li>
-      </div>
+      </div> -->
     </header>
     
     <table class="table" style="margin-bottom: 250px;">

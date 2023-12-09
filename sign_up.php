@@ -73,7 +73,7 @@
     <span>Sign In with Apple</span>
   </button> -->
   <a href="login.php" class="note">Bạn đã có tài khoản</a>
-  <a href="index2.html" class="note">Quay về trang chủ</a>
+  <a href="index.php" class="note">Quay về trang chủ</a>
 
 </form>
 </body>

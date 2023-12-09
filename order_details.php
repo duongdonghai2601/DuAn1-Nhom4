@@ -14,7 +14,7 @@ foreach ($data1 as $value) {
   array_push($idcart, $value['cart_id']);
 }
 $customerid = $_SESSION['user']["user_id"];
-$sql2 = "SELECT * FROM cart  where customer_id = $customerid";
+$sql2 = "SELECT * FROM customers  where customer_idkhach = $customerid";
 $data2 = mysqli_query($mysqli, $sql2);
 
 // if(!$_SESSION['user']){
@@ -33,12 +33,20 @@ $data2 = mysqli_query($mysqli, $sql2);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://kit.fontawesome.com/91ad5c6d6a.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
-
-
   <title>H2T SHOP</title>
   <link rel="stylesheet" href="index2.css" />
   <link rel="stylesheet" href="edit.css" />
   <style>
+table {
+  width: 100%;
+}
+
+th {
+  height: 70px;
+}
+td{
+  padding-left: 30px;
+}
   </style>
 </head>
 
@@ -55,6 +63,7 @@ $data2 = mysqli_query($mysqli, $sql2);
               <li><a href="#">Giày da</a></li>
             </ul>
           </li>  -->
+        <li><a href="sanpham.php">Sản phẩm</a></li>
         <li><a href="about.html">Về H2T</a></li>
         <!-- <li>
             <a href="#forher">Đồ nữ</a>
@@ -90,7 +99,7 @@ $data2 = mysqli_query($mysqli, $sql2);
       </ul>
     </nav>
     <!-- <li><a href="#"><img src="./image/logoh2t.png" class="logo"></a></li> -->
-    <form method="POST" action="index.php">
+    <!-- <form method="POST" action="index.php">
       <div class="search">
         <input type="text" name="searchSanPham" id="search" class="search-input" placeholder="Bạn tìm gì hôm nay ?"
           spellcheck="false" />
@@ -106,7 +115,7 @@ $data2 = mysqli_query($mysqli, $sql2);
       <li class="list-icon">
         <i class="fa-solid fa-phone"></i> + 84 306 6845
       </li>
-    </div>
+    </div> -->
   </header>
 
   <a href="#header" class="btn-go"><i class="fa-solid fa-arrow-up" style="margin-top:15px"></i></a>
@@ -115,7 +124,7 @@ $data2 = mysqli_query($mysqli, $sql2);
     <div class="col1">
       <h1 style="  margin-bottom: 30px;">Dành cho bạn</h1>
       <div class="link">
-        <a class="btn-donate" href="editthongtin.php">
+        <a class="btn-donate" href="thongtin.php">
           CẬP NHẬP THÔNG TIN
         </a><br><br><br>
         <a class="btn-donate" href="order_details.php">
@@ -129,7 +138,7 @@ $data2 = mysqli_query($mysqli, $sql2);
         <table class="table">
           <thead>
             <tr>
-              <th scope="col">Id</th>
+              <!-- <th scope="col">Id</th> -->
               <th scope="col">Ảnh sản phẩm</th>
               <th scope="col">Name</th>
               <th scope="col">Số lượng</th>
@@ -144,9 +153,9 @@ $data2 = mysqli_query($mysqli, $sql2);
               $total = $value['soluong'] * $value['dongia'];
               ?>
               <tr class="justify-content-center">
-                <td>
-                  <?php echo $value['cart_id'] ?>
-                </td>
+                <!-- <td>
+                  <?php echo $value['customer_idkhach'] ?>
+                </td> -->
                 <td>
                   <?php echo "<img src='./material-dashboard-master/material-dashboard-master/pages/uploads/" . $value['hinhsp'] . "'width='100'>"; ?>
                 </td>
@@ -165,7 +174,7 @@ $data2 = mysqli_query($mysqli, $sql2);
                 </td>
                 <td>
                   <p class="text-xs font-weight-bold mb-0">
-                    <?php echo $value['cart_status'] ?>
+                    <?php echo $value['customers_status'] ?>
                   </p>
                 </td>
               </tr>

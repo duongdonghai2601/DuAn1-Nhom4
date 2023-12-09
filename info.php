@@ -4,72 +4,19 @@ include('./connect.php');
 // $user=[];
 //giải thích nếu có $_SESSION['user'] thì sẽ gán $user = $_SESSION['user'] còn không có thì bằng rỗng
 $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
+
 // $user = $_SESSION['user'];
 foreach ($_SESSION['cart'] as $items) {
   extract($items);
 
-if(isset($_POST['muahang'])){
-//   $name = $_POST['hoten'];
-//   $phone = $_POST['sodienthoai'];
-//   $address = $_POST['diachi'];
-//   $pttt = $_POST['pttt'];
-//   if(!$name || !$phone || !$address ||!$pttt){
-//       echo "Vui lòng nhập đầy đủ thông tin. <a href='javascript: history.go(-1)'>Trở lại</a>";
-//       exit();
-//   }
-//   if (is_numeric($phone)) {
-//       // Kiểm tra xem chuỗi đầu vào có đúng 10 kí tự
-//       if (strlen($phone) === 10 && substr($phone, 0, 1) === '0') {
-//       } else {
-//           echo "Số điện thoại hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
-//       exit();
-//       }
-//   } else {
-//       echo "Số điện thoại không hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
-//       exit();
-//   }
 
-//   $queryThongTin = ("
-//   INSERT INTO customers (
-//       customer_name,
-//       customer_phonenumber,
-//       customer_address,
-//       customer_payment
-//   )
-//   VALUE (
-//       '{$name}',
-//       '{$phone}',
-//       '{$address}',
-//       '{$pttt}'
-
-//   )
-// ");
-
-// $queryPro = ("
-// INSERT INTO orders (
-//     product_id,
-//     customer_name
-
-// )
-// VALUE (
-//     '{$id}',
-//     '{$name}'
-// )
-// ");
-
-// $addCustomer = mysqli_query($mysqli,$queryThongTin);
-// $addProd = mysqli_query($mysqli,$queryPro);
-// if ($addCustomer && $addProd){
-//   echo "<script>window.location.href='./index.php'</script>";
-//   exit();
-// }
-    
-// else{
-//     echo "Có lỗi xảy ra trong quá trình đăng ký. <a href='sign_up.php'>Thử lại</a>";
-// }
-
-// }
 }
+
+if(isset($_SESSION['user'])){
+  $userid = $_SESSION['user']['user_id'];
+  $sql = "SELECT * FROM users WHERE user_id = $userid";
+  $query = mysqli_query($mysqli,$sql);
+  $thongtin = mysqli_fetch_array($query);
 }
 ?>
 
@@ -190,6 +137,7 @@ if(isset($_POST['muahang'])){
               <li><a href="#">Giày da</a></li>
             </ul>
           </li>  -->
+          <li><a href="sanpham.php">Sản phẩm</a></li>
           <li><a href="about.html">Về H2T</a></li>
           <!-- <li>
             <a href="#forher">Đồ nữ</a>
@@ -222,7 +170,7 @@ if(isset($_POST['muahang'])){
         </ul>
       </nav>
       <!-- <li><a href="#"><img src="./image/logoh2t.png" class="logo"></a></li> -->
-      <form method="POST" action="index.php">
+      <!-- <form method="POST" action="index.php">
       <div class="search">
         <input
           type="text"
@@ -243,7 +191,7 @@ if(isset($_POST['muahang'])){
         <li class="list-icon">
           <i class="fa-solid fa-phone"></i> + 84 306 6845
         </li>
-      </div>
+      </div> -->
     </header>
 
     <section class="info-details">
@@ -262,16 +210,42 @@ if(isset($_POST['muahang'])){
                                 <div class="modal__body">
                                     <div class="input">
                                         <label class="input__label">Name:</label>
-                                        <input class="input__field" type="text" placeholder="Họ và tên của bạn..." name="hoten">
+                                        <input class="input__field" type="text" placeholder="Họ và tên của bạn..." name="hoten" 
+                                        value="<?php 
+                                        if(isset($_SESSION['user'])){
+                                          echo "$thongtin[users_fullname]";
+                                        }
+                                        else{
+                                          echo "";
+                                        }
+                                        ?>">
                                         <p class="input__description">Không quá 100 kí tự</p>
                                     </div>
                                     <div class="input">
                                         <label class="input__label">Phone:</label>
-                                        <input class="input__field" type="text" placeholder="Số điện thoại của bạn..." name="sodienthoai">
+                                        <input class="input__field" type="text" placeholder="Số điện thoại của bạn..." name="sodienthoai" 
+                                        value="<?php 
+                                        if(isset($_SESSION['user'])){
+                                          echo "$thongtin[users_phonenumber]";
+                                        }
+                                        else{
+                                          echo "";
+                                        }
+                                        ?>"
+                                        >
                                     </div>
                                     <div class="input">
                                         <label class="input__label">Address:</label>
-                                        <input class="input__field" type="text" placeholder="Địa chỉ của bạn..." name="diachi">
+                                        <input class="input__field" type="text" placeholder="Địa chỉ của bạn..." name="diachi"
+                                        value="<?php 
+                                        if(isset($_SESSION['user'])){
+                                          echo "$thongtin[users_address]";
+                                        }
+                                        else{
+                                          echo "";
+                                        }
+                                        ?>"
+                                        >
                                     </div>
                                     <div class="input">
                                         <!-- <label class="input__label">Email</label>
@@ -290,24 +264,26 @@ if(isset($_POST['muahang'])){
             </div>
             <div class="cart">
                 <h2 class="cart-title">Đơn hàng của bạn</h2><br>
-                <?php 
-                    $total = 0;
-                    $i=0;
-                    foreach ($_SESSION['cart'] as $items) {
-                        extract($items);
-                        $linkdelete ="deletecart.php?i=" .$i;
-                        $total += $price * $quantity;
-                         echo'                
-                         <div class="container-product">
-                         <img class="image-product" src="./material-dashboard-master/material-dashboard-master/pages/uploads/'.$image.'">
-                         <p style="font-weight:700; font-size:1.1rem;">'.$name.'</p><br>
-                         <p>'.$price.' VND</p>
-                         <p>'.$quantity.'</p>
-                         <a href="'.$linkdelete.'"><i class="fa-solid fa-trash" style="color: #ffffff;"></i></a>
-                     </div>
-                     <br>';
-                    }
-                    $i++;
+                <?php
+               
+                  $total = 0;
+                  $i=0;
+                  foreach ($_SESSION['cart'] as $items) {
+                      extract($items);
+                      $linkdelete ="deletecart.php?i=" .$i;
+                      $total += $price * $quantity;
+                       echo'                
+                       <div class="container-product">
+                       <img class="image-product" src="./material-dashboard-master/material-dashboard-master/pages/uploads/'.$image.'">
+                       <p style="font-weight:700; font-size:1.1rem;">'.$name.'</p><br>
+                       <p>'.$price.' VND</p>
+                       <p>'.$quantity.'</p>
+                       <a href="'.$linkdelete.'"><i class="fa-solid fa-trash" style="color: #ffffff;"></i></a>
+                   </div>
+                   <br>';
+                  }
+                  $i++;
+                
                 ?>
 
 
@@ -319,7 +295,11 @@ if(isset($_POST['muahang'])){
                     <span class="radio-inner-circle"></span>
                     Thanh toán khi nhận hàng
                     </label>
-                    
+                    <input class="radio-input" name="pttt" id="radio2" type="radio" value="2" >
+                    <label class="radio-label" for="radio2">
+                    <span class="radio-inner-circle"></span>
+                    QR CODE
+                    </label>                      
                 </div>
                 </div>
                 <br>

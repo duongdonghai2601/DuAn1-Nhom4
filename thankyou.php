@@ -4,41 +4,6 @@ include('./connect.php');
 // $user=[];
 //giải thích nếu có $_SESSION['user'] thì sẽ gán $user = $_SESSION['user'] còn không có thì bằng rỗng
 $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
-// $user = $_SESSION['user'];
-
-
-?>
-<?php
-// Kiểm tra xem form đã được gửi đi hay chưa
-if (isset($_POST['load']) && isset($_POST["category"])) {
-    // Lấy giá trị category được chọn từ form
-    $category = $_POST["category"];
-    if(!($category)){
-      echo"Vui lòng chọn doanh mục";
-    }
-    // Truy vấn cơ sở dữ liệu để lấy danh sách sản phẩm trong category
-    $sql2 = "SELECT * FROM products INNER JOIN categories ON products.category_id = categories.category_id WHERE products.category_id = '{$category}'";
-    // Thực thi truy vấn
-    $data1 = mysqli_query($mysqli, $sql2);
-
-}
-
-//search php
-if (isset($_POST['search'])) {
-  $search = $_POST['searchSanPham'];
-  if ($search == "") {
-      echo "Vui lòng nhập tên sản phẩm cần tìm";
-      return;
-  } else {
-      $sql3 = "SELECT * FROM products WHERE product_name LIKE '%$search%'";
-      $query3 = mysqli_query($mysqli, $sql3);
-  }
-}
-$sql1 = "SELECT * FROM products";
-$data = mysqli_query($mysqli, $sql1);
-
-$sqlCate = "SELECT * FROM categories";
-$queryCate = mysqli_query($mysqli, $sqlCate);
 ?>
 
 <!DOCTYPE html>
@@ -54,17 +19,19 @@ $queryCate = mysqli_query($mysqli, $sqlCate);
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     />
- 
-
-    <title>H2T SHOP</title>
+    <title>Về chúng tôi</title>
     <link rel="stylesheet" href="index2.css" />
-    <link rel="stylesheet" href="sanpham.css" />
-
+    <link rel="stylesheet" href="./css/about.css" />
     <style>
+      .content .button {
+        position: absolute;
+        right: 50%;
+        width: 30%;
+      }
     </style>
-  </head >
-  <body onclick="loadAnh()">
-    <header id="header">
+  </head>
+  <body>
+  <header id="header">
       <nav class="menu">
         <ul class="nav-bar">
           <li><a href="index.php">Trang chủ</a></li>
@@ -76,6 +43,7 @@ $queryCate = mysqli_query($mysqli, $sqlCate);
               <li><a href="#">Giày da</a></li>
             </ul>
           </li>  -->
+          <li><a href="sanpham.php">Sản phẩm</a></li>
           <li><a href="about.html">Về H2T</a></li>
           <!-- <li>
             <a href="#forher">Đồ nữ</a>
@@ -132,63 +100,54 @@ $queryCate = mysqli_query($mysqli, $sqlCate);
       </div> -->
     </header>
 
-    <a href="#header" class="btn-go"><i class="fa-solid fa-arrow-up" style="margin-top:15px"></i></a>
-    
-    
-
-<!--CATEGORIES-->
-<form method="post" action="">
-    <div class="container-categories">
-    <div class="categories-design load">
-<h2 class="new-product-title">Doanh mục sản phẩm </h2>
-
-
-  <label class="form-control">
-  <? foreach ($queryCate as $key => $value) { ?>
-    <input type="checkbox" name="category"  value="<? echo $value['category_id']; ?>"><? echo $value['category_name']; ?>
-    <? } ?>
-
-  </label>
-
-
-<button type="submit" class="button-load" name="load" style="margin-top:30px;">Load</button>
-</div>
-
-</form>
-<!-- Hiển thị load category -->
-<div class="product-categories">
-<?php
-    if (isset($_POST['load']) && isset($_POST['category'])) { //Kiểm tra xem nếu chưa nhấn thì ko chạy foreach
-        foreach ($data1 as $key => $value) {
-    ?>
-      <div class="product-categories-card product1">
-    <a href="chitietsanpham.php"> <?php echo "<img src='./material-dashboard-master/material-dashboard-master/pages/uploads/" . $value['product_image_main'] . "'width='100%';height:400px;>"; ?></a>
-          <h3><?php echo $value['product_name'] ?></h3>
-          <p>$ <?php echo $value['product_price'] ?> VND</p>
-          <a class="button" href="chitietsanpham.php?id=<?php echo $value['product_id'] ?>">Xem thêm</a>
+    <section id="Review" class="Review">
+      <div class="parent">
+        <div class="info">
+          <div class="content">
+            <h1>H2T - Cảm ơn quý khách đã ủng hộ</h1>
+            <p>
+              H2T xin chân thành cảm ơn bạn đã tin tưởng và ủng hộ shop. Chúng
+              tớ mong rằng bạn sẽ hài lòng với những sản phẩm của chúng tớ. Nếu
+              gặp bất cứ vấn đề gì về sản phẩm, bạn hãy liên hộ với chúng tớ
+              ngay để đợi hỗ trợ tận tình nhé !
+            </p>
+            <a
+              class="button"
+              href="index.php"
+              style="margin-top: 50px; width: 30%"
+              >Tiếp tục mua sắm</a
+            >
+          </div>
+        </div>
+        <div class="image-h2t">
+          <img src="./image/logoh2t.png" />
+        </div>
       </div>
-      <?php }
-    } ?>
-</div>
-</div>
+    </section>
 
-
-<!-- Hien thi search san pham -->
-
-<div class="product-container">
-<?php
-    if (isset($_POST['search'])) { //Kiểm tra xem nếu chưa nhấn thì ko chạy foreach
-        foreach ($query3 as $key => $value) {
-    ?>
-      <div class="product-card product">
-    <a href="chitietsanpham.php"> <?php echo "<img src='./material-dashboard-master/material-dashboard-master/pages/uploads/" . $value['product_image_main'] . "'width='100%';height:400px;>"; ?></a>
-          <h3><?php echo $value['product_name'] ?></h3>
-          <p>$ <?php echo $value['product_price'] ?> VND</p>
-          <a class="button" href="chitietsanpham.php?id=<?php echo $value['product_id'] ?>">Xem thêm</a>
+    <section id="work" class="work">
+      <h2>Worked With</h2>
+      <div class="container">
+        <div class="row work-section">
+          <div class="col-md-2 center">
+            <img src="image/logo1.png" alt="" style="width: 200px" />
+          </div>
+          <div class="col-md-2 center">
+            <img src="image/logo2.png" alt="" style="width: 200px" />
+          </div>
+          <div class="col-md-2 center">
+            <img src="image/logo3.png" alt="" style="width: 200px" />
+          </div>
+          <div class="col-md-2 center">
+            <img src="image/logo4.png" alt="" style="width: 200px" />
+          </div>
+          <div class="col-md-2 center">
+            <img src="image/logo5.png" alt="" style="width: 200px" />
+          </div>
+        </div>
       </div>
-      <?php }
-    } ?>
-</div>
+    </section>
+
     <footer class="footer">
       <div class="container">
         <div class="row">
@@ -233,23 +192,4 @@ $queryCate = mysqli_query($mysqli, $sqlCate);
       </div>
     </footer>
   </body>
-  <script src="slideshow.js"></script>
-  <script>
-    var myIndex = 0;
-    carousel();
-
-    function carousel() {
-      var i;
-      var x = document.getElementsByClassName("mySlides");
-      for (i = 0; i < x.length; i++) {
-        x[i].style.display = "none";
-      }
-      myIndex++;
-      if (myIndex > x.length) {
-        myIndex = 1;
-      }
-      x[myIndex - 1].style.display = "block";
-      setTimeout(carousel, 4000); // thay doi anh moi 4s
-    }
-  </script>
 </html>
