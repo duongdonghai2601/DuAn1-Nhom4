@@ -5,16 +5,9 @@ include('./connect.php');
 //giải thích nếu có $_SESSION['user'] thì sẽ gán $user = $_SESSION['user'] còn không có thì bằng rỗng
 $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
 
-$sql1 = "SELECT * FROM cart INNER JOIN order_details ON cart.cart_id = order_details.cart_id";
-// Thực thi truy vấn
-$idcart = [];
-$data1 = mysqli_query($mysqli, $sql1);
-foreach ($data1 as $value) {
-  // echo $value['cart_id']."<br>";
-  array_push($idcart, $value['cart_id']);
-}
+
 $customerid = $_SESSION['user']["user_id"];
-$sql2 = "SELECT * FROM customers  where customer_idkhach = $customerid";
+$sql2 = "SELECT * FROM orders  where order_idcustomer = $customerid";
 $data2 = mysqli_query($mysqli, $sql2);
 
 // if(!$_SESSION['user']){
@@ -150,31 +143,31 @@ td{
           <tbody>
             <?php
             foreach ($data2 as $key => $value):
-              $total = $value['soluong'] * $value['dongia'];
+              $total = $value['order_quantity'] * $value['order_productprice'];
               ?>
               <tr class="justify-content-center">
                 <!-- <td>
-                  <?php echo $value['customer_idkhach'] ?>
+                  <?php echo $value['order_idcustomer'] ?>
                 </td> -->
                 <td>
-                  <?php echo "<img src='./material-dashboard-master/material-dashboard-master/pages/uploads/" . $value['hinhsp'] . "'width='100'>"; ?>
+                  <?php echo "<img src='./material-dashboard-master/material-dashboard-master/pages/uploads/" . $value['order_productimage'] . "'width='100'>"; ?>
                 </td>
                 <td>
-                  <?php echo $value['tensp'] ?>
+                  <?php echo $value['order_productname'] ?>
                 </td>
 
                 <td>
-                  <?php echo $value['soluong'] ?>
+                  <?php echo $value['order_quantity'] ?>
                 </td>
                 <td>
-                  <?php echo $value['dongia'] ?>
+                  <?php echo $value['order_productprice'] ?>
                 </td>
                 <td>
                   <?php echo $total ?>
                 </td>
                 <td>
                   <p class="text-xs font-weight-bold mb-0">
-                    <?php echo $value['customers_status'] ?>
+                    <?php echo $value['order_status'] ?>
                   </p>
                 </td>
               </tr>

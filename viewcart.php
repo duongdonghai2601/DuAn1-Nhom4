@@ -112,6 +112,7 @@ $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
       <th scope="col">Ảnh sản phẩm</th>
       <th scope="col">Giá</th>
       <th scope="col">Số lượng</th>
+      <th scope="col">Kích thước</th>
       <th scope="col">Tổng tiền</th>
       <th scope="col">Action</th>
     </tr>
@@ -137,6 +138,9 @@ $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
                     </td>
                     <td>
                     '. $quantity .'
+                    </td>
+                    <td>
+                    '. $size .'
                     </td>
                     <td>
                     '. $total .' VND

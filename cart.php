@@ -7,6 +7,7 @@ if(isset($_POST['addCart'])){
     $image = $_POST['image'];
     $price = $_POST['product_price'];
     $quantity = $_POST['soluongmua'];
+    $size = $_POST['size'];
 
     $flash=0; //kiểm tra sản phẩm có trùng trong giỏ hàng hay không, nếu không trùng thì thêm mới
     //Kiểm tra sản phẩm có trong giỏ hàng hay không
@@ -22,7 +23,7 @@ if(isset($_POST['addCart'])){
 
     if($flash==0){
     // Thêm mới sản phẩm vào giỏ hàng
-    $products=["id"=>$id,"name"=>$name,"image"=>$image,"price"=>$price,"quantity" => $quantity];
+    $products=["id"=>$id,"name"=>$name,"image"=>$image,"price"=>$price,"quantity" => $quantity,"size" => $size];
     $_SESSION['cart'][]=$products;
 }
 header('location:viewcart.php');

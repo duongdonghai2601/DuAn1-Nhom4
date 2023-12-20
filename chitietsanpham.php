@@ -309,6 +309,25 @@ input[type="number"]:focus {
 .info .btn-color:active {
   background-color: var(--secondary-color);
 }
+/* Thiết lập font chữ và kích thước */
+select {
+font-family: Arial, sans-serif;
+font-size: 16px;
+padding: 8px;
+margin-left: 20px;
+}
+select {
+background-color: #f4f4f4;
+color: #333;
+}
+select {
+border: 2px solid #ccc;
+border-radius: 4px;
+ }
+select:focus {
+border-color: #007bff;
+box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
 </style>
   </head >
   <body>
@@ -417,7 +436,11 @@ input[type="number"]:focus {
             ?>
             <p>Số lượng kho: <?php echo $data['product_quantity'] ?></p>
             <p> Đã bán: <?php echo $data['products_soluongban'] ?></p>
-
+            <select id="size" name="size">
+              <option value="M">Size M</option>
+              <option value="L">Size L</option>
+              <option value="XL">Size XL</option>
+            </select>
             <p>Số lượng mua: <input type="number" name="soluongmua" max="<?php echo $data['product_quantity'] ?>" min="1" value="1"></p>
 
           <div class="button-1line">

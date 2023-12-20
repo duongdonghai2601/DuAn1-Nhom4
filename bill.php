@@ -4,6 +4,8 @@ $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
 // $customerid = $_SESSION['user']["user_id"];
 include('./connect.php');
 
+
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 require "sendmail/phpmailer/src/Exception.php";
@@ -12,86 +14,6 @@ require "sendmail/phpmailer/src/SMTP.php";
 
 $mail = new PHPMailer(true);
 
-//Truong hop chua dang nhap
-// if(isset($_POST['muahang'])){
-      
-//       $name = $_POST['hoten'];
-//       $phone = $_POST['sodienthoai'];
-//       $address = $_POST['diachi'];
-//       $pttt = $_POST['pttt'];
-//       if(!$name || !$phone || !$address ||!$pttt){
-//         echo "Vui lòng nhập đầy đủ thông tin. <a href='javascript: history.go(-1)'>Trở lại</a>";
-//         exit();
-//     }
-//     if (is_numeric($phone)) {
-//         // Kiểm tra xem chuỗi đầu vào có đúng 10 kí tự
-//         if (strlen($phone) === 10 && substr($phone, 0, 1) === '0') {
-//         } else {
-//             echo "Số điện thoại hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
-//         exit();
-//         }
-//     } else {
-//         echo "Số điện thoại không hợp lệ. <a href='javascript: history.go(-1)'>Trở lại</a>";
-//         exit();
-//     }
-//       $total = 0;
-//       $sql = "INSERT INTO customers (customer_name,customer_phonenumber,customer_address,customer_payment) VALUES('$name','$phone','$address','$pttt')"  ; 
-//       $query = mysqli_query($mysqli,$sql);
-//       if ($query) {
-//         $last_id = mysqli_insert_id($mysqli);
-//         // echo "New record created successfully. Last inserted ID is: " . $last_id;
-        
-//       } else {
-//         echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
-//       }
-
-//       for ($i=0; $i < sizeof($_SESSION['cart']); $i++) { 
-//         $tensp = $_SESSION['cart'][$i]['name'];
-//         $hinhsp = $_SESSION['cart'][$i]['image'];
-//         $dongia = $_SESSION['cart'][$i]['price'];
-//         $soluong = $_SESSION['cart'][$i]['quantity'];
-//         $thanhtien = $soluong *$dongia;
-        
-
-         
-//         $sql1 = "INSERT INTO cart (tensp ,hinhsp, dongia, soluong, thanhtien ) 
-//         VALUES('$tensp','$hinhsp','$dongia','$soluong','$thanhtien')" ; 
-//         $query1 = mysqli_query($mysqli,$sql1);
-//         $last_id_cart = mysqli_insert_id($mysqli);
-
-//         // $sql1 = "INSERT INTO cart (tensp ,hinhsp, dongia, soluong, thanhtien, customer_id) 
-//         // VALUES('$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$customerid')" ; 
-//         // $query1 = mysqli_query($mysqli,$sql1);
-//         // $last_id_cart = mysqli_insert_id($mysqli);
-//       }
-//       $sql2 = "INSERT INTO order_details (cart_id) VALUES ('$last_id_cart')";
-//       $query2 = mysqli_query($mysqli,$sql2);
-
-
-
-
-//       //show giỏ hàng
-//       $ttkh = ' <h2>Bạn đã đặt hàng thành công !</h2> <br>
-//       <h2>ID đơn hàng là: '.$last_id.'</h2> <br>
-//       </div>
-//         <span class="modal__title">Thông tin đơn hàng</span>
-//       </div>
-//       <div class="modal__body">
-//       <div class="input">
-//           <label class="input__label">Name:</label>
-//           <input class="input__field" type="text" placeholder="Họ và tên của bạn..." name="hoten" value="'.$name.'">
-//           <p class="input__description">Không quá 100 kí tự</p>
-//       </div>
-//       <div class="input">
-//           <label class="input__label">Phone:</label>
-//           <input class="input__field" type="text" placeholder="Số điện thoại của bạn..." name="sodienthoai"  value="'.$phone.'"> 
-//       </div>
-//       <div class="input">
-//           <label class="input__label">Address:</label>
-//           <input class="input__field" type="text" placeholder="Địa chỉ của bạn..." name="diachi"  value="'.$address.'">
-//       </div>';
-
-// }
 //Neu chua dang nhap
 if(!$user){
 if(isset($_POST['muahang'])){
@@ -121,6 +43,7 @@ if(isset($_POST['muahang'])){
       $hinhsp = $_SESSION['cart'][$i]['image'];
       $dongia = $_SESSION['cart'][$i]['price'];
       $soluong = $_SESSION['cart'][$i]['quantity'];
+      $size = $_SESSION['cart'][$i]['size'];
       $thanhtien = $soluong *$dongia;
       
 
@@ -130,10 +53,10 @@ if(isset($_POST['muahang'])){
       // $query1 = mysqli_query($mysqli,$sql1);
       // // $last_id_cart = mysqli_insert_id($mysqli);
       
-      $sql2 = "INSERT INTO customers 
-      (customer_name,customer_phonenumber,customer_address,customer_payment,tensp ,hinhsp, dongia, soluong, thanhtien) 
+      $sql2 = "INSERT INTO orders 
+      (order_name,order_phonenumber,order_address,order_payment,order_productname,order_productimage, order_productprice, order_quantity, order_total,order_size) 
       VALUES 
-      ('$name','$phone','$address','$pttt','$tensp','$hinhsp','$dongia','$soluong','$thanhtien')";
+      ('$name','$phone','$address','$pttt','$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$size')";
       $query2 = mysqli_query($mysqli,$sql2);
       if ($query2) {
         $last_id = mysqli_insert_id($mysqli);
@@ -181,19 +104,8 @@ $sql1 = "UPDATE products SET product_quantity = product_quantity - '$soluong', p
 $resufl1 = mysqli_query($mysqli,$sql1);
 
 
-
-if (isset($_POST['magiamgia']) && $_POST['magiamgia'] == 'checked'){
-  $discount_amount = 0;
-  $discount_amount = $total * 0.1;
-  $final_amount = $total - $discount_amount;
 }
-else{
-  // Kiểm tra mã giảm giá và tính toán giảm giá
 
-}
- 
-
-}
 //Da dang nhap va co tai khoan se them duoc customerid
 else{
   if(isset($_POST['muahang'])){
@@ -225,6 +137,7 @@ else{
       $hinhsp = $_SESSION['cart'][$i]['image'];
       $dongia = $_SESSION['cart'][$i]['price'];
       $soluong = $_SESSION['cart'][$i]['quantity'];
+      $size = $_SESSION['cart'][$i]['size'];
       $thanhtien = $soluong *$dongia;
       
 
@@ -239,10 +152,10 @@ else{
       // $query1 = mysqli_query($mysqli,$sql1);
       // // $last_id_cart = mysqli_insert_id($mysqli);
 
-      $sql2 = "INSERT INTO customers 
-      (customer_name,customer_phonenumber,customer_address,customer_payment,tensp ,hinhsp, dongia, soluong, thanhtien,customer_idkhach) 
+      $sql2 = "INSERT INTO orders 
+      (order_name,order_phonenumber,order_address,order_payment,order_productname,order_productimage, order_productprice, order_quantity, order_total,order_size,order_idcustomer) 
       VALUES 
-      ('$name','$phone','$address','$pttt','$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$customerid')";
+      ('$name','$phone','$address','$pttt','$tensp','$hinhsp','$dongia','$soluong','$thanhtien','$size','$customerid')";
       $query2 = mysqli_query($mysqli,$sql2);
       if ($query2) {
         $last_id = mysqli_insert_id($mysqli);
@@ -253,7 +166,7 @@ else{
       }
 
 
-    }
+}
 
 
 
@@ -281,49 +194,92 @@ else{
     </div>';
 
 
+$sql2 = "SELECT * FROM orders  where order_id = $last_id";
+$data2 = mysqli_query($mysqli, $sql2);
+$thongtin = mysqli_fetch_array($data2);
+// print_r($thongtin) ;
+// Cấu hình SMTP để gửi email
+// dat dieu kien neu co !user moi gui chua lam nha ma
+$mail->isSMTP();
+$mail->Host = 'smtp.gmail.com';
+$mail->SMTPAuth = true;
+$mail->Username = 'haibanh2004@gmail.com';
+$mail->Password = 'ntyhzlpytepozgyi';
+$mail->SMTPSecure = 'tls';
+$mail->Port = 587;
+
+// Thiết lập thông tin người gửi và người nhận
+$mail->setFrom('haibanh2004@gmail.com', 'H2T SHOP');
+$mail->addAddress($_SESSION['user']['gmail'], $_SESSION['user']['username']);
+
+// Thiết lập tiêu đề email và nội dung
+$mail->Subject = 'Your Order';
+
+// To send HTML mail, the Content-type header must be set
+$headers  = 'MIME-Version: 1.0' . "\r\n";
+$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+
+$mail->isHTML(true);  // Bật chế độ HTML
+
+
+// Bắt đầu nội dung email
+// Compose a simple HTML email message
+// $message = '';
+// // $message .= '';
+// foreach ($data2 as $value) {
+// $message .= '<table>
+// <tr>
+// <td>' . $value['order_productname'] . '</td>
+// <td>' . $value['order_quantity'] . '</td>
+// <td>' . $value['order_productprice'] . '</td>
+// </tr>
+// </table>';
+// }
+// // $message .= '</body></html>';
+
+foreach ($data2 as $value) {
+// Nội dung HTML của email (ví dụ: một bảng)
+$mail->Body = '<html>
+                <body>
+                  <h1>Danh sách các sản phẩm bạn đã mua tại H2T SHOP</h1>
+                  <p>Cảm ơn bạn đã ủng hộ chúng tôi !</p>
+                  <table border="1">
+                    <tr>
+                      <th>Tên sản phẩm</th>
+                      <th>Số lượng sản phẩm</th>
+                      <th>Gía sản phẩm</th>
+                      <th>Kích thước sản phẩm</th>
+                    </tr>
+                    <tr>
+                      <td>' . $value['order_productname'] . '</td>
+                      <td>' . $value['order_quantity'] . '</td>
+                      <td>' . $value['order_productprice']. '</td>
+                      <td>' . $value['order_size']. '</td>
+                    </tr>
+                  </table>
+                </body>
+              </html>';
+}
+// Gửi email
+$mail->send();
+// header('location:index.php');
+// echo 'Email đã được gửi thành công!';
+
 }
 
 //Tru so luong kho khi mua xong
 $sql1 = "UPDATE products SET product_quantity = product_quantity - '$soluong', products_soluongban = products_soluongban + '$soluong' where product_name ='$tensp'";
 $resufl1 = mysqli_query($mysqli,$sql1);
+
+
+
+
+
 }
 
 
 
 if(isset($_POST['xacnhan'])){
-    // Cấu hình SMTP để gửi email
-    $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'haibanh2004@gmail.com';
-    $mail->Password = 'ntyhzlpytepozgyi';
-    $mail->SMTPSecure = 'tls';
-    $mail->Port = 587;
-
-    // Thiết lập thông tin người gửi và người nhận
-    $mail->setFrom('haibanh2004@gmail.com', 'H2T SHOP');
-    $mail->addAddress($_SESSION['user']['gmail'], $_SESSION['user']['username']);
-
-    // Thiết lập tiêu đề email và nội dung
-    $mail->Subject = 'CONGRATULATIONS CUSTOMERS';
-    $mail->Body    = 'Chúng tôi, H2T Store, muốn gửi lời cảm ơn sâu sắc đến quý khách hàng đã tin tưởng và mua sắm tại cửa hàng của chúng tôi.
-
-    Sự ủng hộ và lòng tin tưởng của quý khách hàng đã mang lại niềm vui và động lực lớn cho chúng tôi. Chúng tôi luôn nỗ lực hàng ngày để mang đến những sản phẩm và dịch vụ tốt nhất, đáp ứng các yêu cầu và mong đợi của quý khách. 
-    
-    Chúng tôi trân trọng sự lựa chọn của quý khách hàng và cam kết tiếp tục cải thiện để mang lại trải nghiệm mua sắm tốt hơn cho quý khách hàng. Nếu có bất kỳ góp ý, ý kiến hoặc câu hỏi nào, vui lòng liên hệ với chúng tôi. Chúng tôi luôn sẵn lòng giúp đỡ. 
-    
-    Một lần nữa, xin chân thành cảm ơn quý khách hàng đã ủng hộ H2T Store. Chúc quý khách có những trải nghiệm mua sắm thú vị và hài lòng với sản phẩm của chúng tôi.
-    
-    Trân trọng,
-    
-    H2T Store
-    <img src="./image/logoh2t.png">
-    ';
-
-    // Gửi email
-    $mail->send();
-
-    echo 'Email đã được gửi thành công!';
 
   unset($_SESSION['cart']);
   header('location:thankyou.php');

@@ -4,6 +4,14 @@ include('./connect.php');
 // $user=[];
 //giải thích nếu có $_SESSION['user'] thì sẽ gán $user = $_SESSION['user'] còn không có thì bằng rỗng
 $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
+
+
+
+
+if(isset($_POST['xacnhan'])){
+ header('location:index.php');
+
+}
 ?>
 
 <!DOCTYPE html>
@@ -99,7 +107,7 @@ $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
         </li>
       </div> -->
     </header>
-
+    <form action="" method="post">
     <section id="Review" class="Review">
       <div class="parent">
         <div class="info">
@@ -111,12 +119,13 @@ $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
               gặp bất cứ vấn đề gì về sản phẩm, bạn hãy liên hộ với chúng tớ
               ngay để đợi hỗ trợ tận tình nhé !
             </p>
-            <a
+            <button
               class="button"
-              href="index.php"
+              type="submit"
               style="margin-top: 50px; width: 30%"
-              >Tiếp tục mua sắm</a
-            >
+              name="xacnhan">
+              Tiếp tục mua sắm
+              </button>
           </div>
         </div>
         <div class="image-h2t">
@@ -124,7 +133,7 @@ $user = (isset($_SESSION['user'])) ? $_SESSION['user'] : [];
         </div>
       </div>
     </section>
-
+    </form>
     <section id="work" class="work">
       <h2>Worked With</h2>
       <div class="container">
